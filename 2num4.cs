@@ -16,11 +16,13 @@ namespace Project
 
             string MethodName { get; }
         }
-        public class LeftRectangleMethod : INumericalIntegration
+        public sealed class LeftRectangleMethod : INumericalIntegration
         {
 
             public double CalculateIntegral(Func<double, double> function, double a, double b, double eps)
             {
+                CheckingForErrors(function, a, b, eps);
+
                 double calculate(Func<double, double> function, double a, double b, int n)
                 {
 
@@ -53,7 +55,8 @@ namespace Project
         {
             public double CalculateIntegral(Func<double, double> function, double a, double b, double eps)
             {
-                
+                CheckingForErrors(function, a, b, eps);
+
                 double calculate(Func<double, double> function, double a, double b, int n)
                 {
                     double h = (b - a) / n;
@@ -84,7 +87,8 @@ namespace Project
         {
             public double CalculateIntegral(Func<double, double> function, double a, double b, double eps)
             {
-                
+
+                CheckingForErrors(function, a, b, eps);
 
                 double calculate(Func<double, double> function, double a, double b, int n)
                 {
@@ -118,7 +122,8 @@ namespace Project
         {
             public double CalculateIntegral(Func<double, double> function, double a, double b, double eps)
             {
-                
+                CheckingForErrors(function, a, b, eps);
+
                 double calculate(Func<double, double> function, double a, double b, int n)
                 {
                     double h = (b - a) / n;
@@ -151,7 +156,7 @@ namespace Project
         {
             public double CalculateIntegral(Func<double, double> function, double a, double b, double eps)
             {
-                
+                CheckingForErrors(function, a, b, eps);
 
                 double calculate(Func<double, double> function, double a, double b, int n)
                 {
@@ -183,6 +188,22 @@ namespace Project
             public string MethodName => "Sympson Method";
 
         }
+
+        public static void CheckingForErrors(Func<double, double> function, double a, double b, double eps)
+        {
+            if (a > b)
+            {
+                throw new ArgumentException("the value was entered incorrectly ", nameof(a));
+            }
+            if (eps <= 0)
+            {
+                throw new ArgumentException("the value was entered incorrectly", nameof(eps));
+            }
+            if (function == null)
+            {
+                throw new ArgumentException("the function was entered incorrectly", nameof(function));
+            }
+        }
         static void Main()
         {
             var solvers = new INumericalIntegration[]
@@ -194,15 +215,15 @@ namespace Project
                 new SympsonMethod()
              };
 
-            double Foo(double x) => x / (x - 1);
-            double leftBound = 10;
-            double rightBound = 20;
-            double epsilon = 1e-5;
+            double Foo(double x) => Math.Pow(Math.Sin(x*x),2)/ Math.Pow(Math.E, x);
+            double leftBound = 5;
+            double rightBound = 8;
+            double epsilon = 0.0005;
             try
             {
                 foreach (var solver in solvers)
                 {
-                    //var solution = solver.CalculateIntegral(Foo, leftBound, rightBound, epsilon);
+                    
                     Console.WriteLine(solver.MethodName);
                     Console.WriteLine(solver.CalculateIntegral(Foo, leftBound, rightBound, epsilon));
                 }
