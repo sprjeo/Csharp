@@ -29,14 +29,14 @@ namespace Project
             return iterations;
         }
     }
-    //Реализация тестов простоты(детерминированный, Ферма, Соловея-Штрассена, Миллера-Рабина) :
+    
 
 
     public class DeterministicPrimalityTest : IPrimalityTest
     {
         public bool IsPrime(int number, double minProbability)
         {
-            // реализация детерминированного теста простоты
+            
 
             if (number <= 1)
             {
@@ -66,82 +66,118 @@ namespace Project
 
     public class FermatPrimalityTest : ProbabilisticPrimalityTest
     {
+        private static Random random = new Random();
+
         public override bool IsPrime(int number, double minProbability)
         {
-            // реализация теста Ферма var b = new NumberTheory();
+            var b = new NumberTheory();
 
             if (number <= 1)
-            {
-                return false;
-            }
-            if (number <= 3)
-            {
-                return true;
-            }
-
-            Random random = new Random();
-            int numberOfWitnesses = 0;
-            var b = new NumberTheory();
-            for (int i = 0; i < 1000; i++)
-            {
-                int a = random.Next(2, number - 1);
-                if (b.GCD(a, number) != 1)
-                {
                     return false;
-                }
-                if (b.ModPow(a, number - 1, number) != 1)
-                {
-                    numberOfWitnesses++;
-                }
-            }
+                if (number <= 3)
+                    return true;
 
-            double probability = 1 - Math.Pow(0.5, numberOfWitnesses);
-            return probability >= minProbability;
+                for (int i = 0; i < 1000; i++)
+                {
+                    int a = random.Next(2, number - 2);
+                    if (b.GCD(a, number) != 1)
+                        return false;
+                    if (b.ModPow(a, number - 1, number) != 1)
+                        return false;
+                }
+                return true;
+            
+            //
+            //         if (number <= 1)
+            //         {
+            //             return false;
+            //         }
+            //         if (number <= 3)
+            //         {
+            //             return true;
+            //         }
+            //
+            //         Random random = new Random();
+            //         int numberOfWitnesses = 0;
+            //         var b = new NumberTheory();
+            //         for (int i = 0; i < 1000; i++)
+            //         {
+            //             int a = random.Next(2, number - 1);
+            //             if (b.GCD(a, number) != 1)
+            //             {
+            //                 return false;
+            //             }
+            //             if (b.ModPow(a, number - 1, number) != 1)
+            //             {
+            //                 numberOfWitnesses++;
+            //             }
+            //         }
+            //
+            //         double probability = 1 - Math.Pow(0.5, numberOfWitnesses);
+            //            return probability >= minProbability;
         }
     }
 
     public class SolovayStrassenPrimalityTest : ProbabilisticPrimalityTest
     {
+        private static Random random = new Random();
         public override bool IsPrime(int number, double minProbability)
         {
-            // реализация теста Соловея-Штрассена
-
-            if (number <= 1)
-            {
+            var b = new NumberTheory();
+            if (number < 2)
                 return false;
-            }
-            if (number == 2)
-            {
-                return true;
-            }
-            if (number % 2 == 0)
-            {
+            if (number != 2 && number % 2 == 0)
                 return false;
-            }
 
-            Random random = new Random();
             for (int i = 0; i < 1000; i++)
             {
                 int a = random.Next(2, number - 1);
-                var b = new NumberTheory();
                 int jacobi = b.JacobiSymbol(a, number);
-                int mod = b.ModPow(a, (number - 1) / 2, number);
-                if (mod == 0 || jacobi == 0 || mod != jacobi % number)
-                {
-                    return false;
-                }
-            }
+                int modPow = b.ModPow(a, (number - 1) / 2, number);
 
-            double probability = 1 - Math.Pow(0.5, 1000);
-            return probability >= minProbability;
+                if (jacobi == 0 || modPow != jacobi % number)
+                    return false;
+            }
+            return true;
         }
+    
+
+        //          if (number <= 1)
+        //          {
+        //              return false;
+        //          }
+        //          if (number == 2)
+        //          {
+        //              return true;
+        //          }
+        //          if (number % 2 == 0)
+        //          {
+        //              return false;
+        //          }
+        //
+        //          Random random = new Random();
+        //          for (int i = 0; i < 1000; i++)
+        //          {
+        //              int a = random.Next(2, number - 1);
+        //              var b = new NumberTheory();
+        //              int jacobi = b.JacobiSymbol(a, number);
+        //              int mod = b.ModPow(a, (number - 1) / 2, number);
+        //              if (mod == 0 || jacobi == 0 || mod != jacobi % number)
+        //              {
+        //                  return false;
+        //              }
+        //          }
+        //
+        //          double probability = 1 - Math.Pow(0.5, 1000);
+        //          return probability >= minProbability;
     }
+    
 
     public class MillerRabinPrimalityTest : ProbabilisticPrimalityTest
     {
         public override bool IsPrime(int number, double minProbability)
         {
-            // реализация теста Миллера-Рабина
+            
             if (number <= 1)
             {
                 return false;
@@ -194,15 +230,14 @@ namespace Project
                 }
             }
 
-            double probability = 1 - Math.Pow(0.25, 1000);
-            return probability >= minProbability;
+            return true;
         }
     }
     public class NumberTheory
     {
         public int GCD(int a, int b)
         {
-            // реализация вычисления НОД
+            
             while (b != 0)
             {
                 var temp = b;
@@ -304,7 +339,7 @@ namespace Project
     {
         static void Main()
         {
-            int numberToTest =17;
+            int numberToTest =499;
             double minProbability = 0.95;
             DeterministicPrimalityTest determ = new DeterministicPrimalityTest();
             bool isPrime = determ.IsPrime(numberToTest, minProbability);

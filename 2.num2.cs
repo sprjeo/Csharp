@@ -2,6 +2,7 @@
 using System.Numerics;
 using System.Collections.Generic;
 using System.Collections;
+using System.Text;
 
 namespace Project
 {
@@ -36,21 +37,16 @@ namespace Project
         }
         static string EnumerableToString<T>(IEnumerable<IEnumerable<T>> collections)
         {
-            string result = "";
-            result += "[";
 
+            var builder = new StringBuilder("[");
             foreach (var collection in collections)
             {
-                string collectionString = "";
-                collectionString += " [ ";
-                collectionString += string.Join(", ", collection);
-                collectionString += " ],";
-                result += collectionString;
+                builder.Append($"[{string.Join(", ", collection)}],");
+           
             }
 
-            result = result[..^1];
-            result += " ]";
-            return result;
+            builder.Append( " ]");
+            return builder.ToString();
         }
     }
 
@@ -122,7 +118,7 @@ namespace Project
             }
             else
             {
-                int curr = 0; // исключение повторений самих сочетаний
+                int curr = 0; 
                 foreach (var i in collection)
                 {
                     foreach (var j in collection.Skip(curr++).GenerationCombinationsWithElementRepetition<T>(k - 1))

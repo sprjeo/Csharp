@@ -10,27 +10,36 @@ namespace Project
     {
         static void Main(string[] args)
         {
+
             double eps = Convert.ToDouble(args[0]);
-            e_1(eps);
-            e_2(eps);
-            e_3(eps);
-            p_1(eps);
-            p_2(eps);
-            p_3(eps);
-            ln_1(eps);
-            ln_2(eps);
-            ln_3(eps);
-            sqrt_1(eps);
-            sqrt_2(eps);
-            sqrt_3(eps);
-            gamma_1(eps);
-            gamma_2(eps);
-            gamma_3(eps);
+            if (eps <= 0)
+            {
+                throw new ArgumentException("incorrect epsilon value", nameof(eps));
+            }
+
+            Console.WriteLine( e_1(eps));
+           Console.WriteLine( e_2(eps));
+           Console.WriteLine( e_3(eps));
+            Console.WriteLine(p_1(eps));
+            Console.WriteLine( p_2(eps));
+           Console.WriteLine( p_3(eps));
+           Console.WriteLine( ln_1(eps));
+           Console.WriteLine( ln_2(eps));
+           Console.WriteLine( ln_3(eps));
+           Console.WriteLine( sqrt_1(eps));
+           Console.WriteLine( sqrt_2(eps));
+           Console.WriteLine( sqrt_3(eps));
+           Console.WriteLine( gamma_1(eps));
+           Console.WriteLine( gamma_2(eps));
+            Console.WriteLine(gamma_3(eps));
         }
             
 
-            public static void e_1(double epsilon)
+        public static double e_1(double epsilon)
         {
+
+            
+
             double n = 2;
             double previous = Math.Pow((1.0 + 1.0 / n), n);
             while (true)
@@ -43,13 +52,13 @@ namespace Project
                 }
                 else
                 {
-                    Console.WriteLine(previous);
-                    break;
+                    return previous;
+                    
                 }
             }
 
         }
-        public static void e_2(double epsilon)
+        public static double e_2(double epsilon)
         {
             long n = 0;
             double previous = 1.0 / (double)fact(n);
@@ -65,13 +74,13 @@ namespace Project
                 }
                 else
                 {
-                    Console.WriteLine(previous);
-                    break;
+                    return previous;
+                    
                 }
             }
 
         }
-        public static void e_3(double epsilon)
+        public static double e_3(double epsilon)
         {
             double step = epsilon / 10;
             double previous = step;
@@ -84,32 +93,34 @@ namespace Project
                 }
                 else
                 {
-                    Console.WriteLine(previous);
-                    break;
+                    return previous;
                 }
             }
         }
-        public static void p_1(double epsilon)
-        {
-            //epsilon = epsilon < 0.001 ? 0.00999 : epsilon;
+        public static double p_1(double epsilon)
+        {   
             long n = 1;
-            double previous = Math.Pow(2, 4 * n) * Math.Pow(fact(n), 4) / n / Math.Pow(fact(2 * n), 2);
+            double previous = (Math.Pow(16,n)*Math.Pow(fact(n), 4)) / (n * fact(2*n)  );
+           
             while (true)
             {
                 n++;
-                double current = Math.Pow(2, 4 * n) * Math.Pow(fact(n), 4) / n / Math.Pow(fact(2 * n), 2);
+                double current = (Math.Pow(16, n) * Math.Pow(fact(n), 4)) / (n * fact(2 * n));
+                
                 if (Math.Abs(current - previous) > epsilon)
                 {
                     previous = current;
+                    
                 }
                 else
                 {
-                    Console.WriteLine(previous);
-                    break;
+                    return previous;
+                    
                 }
             }
+            
         }
-        public static void p_2(double epsilon)
+        public static double p_2(double epsilon)
         {
             long n = 1;
             double previous = Math.Pow(-1, n + 1) / (2 * n - 1);
@@ -126,28 +137,30 @@ namespace Project
                 else
                 {
                     accum *= 4;
-                    Console.WriteLine(accum);
-                    break;
+                    return accum;           
                 }
             }
         }
-        public static void p_3(double epsilon)
+        public static double p_3(double epsilon)
         {
             for (double i = 0; i <= 2 * Math.PI; i += epsilon / 10.0)
             {
                 double value = Math.Cos(i);
                 if (Math.Abs(value + 1) < epsilon)
                 {
-                    Console.WriteLine(i);
-                    break;
+                    return i;
+                    
                 }
+                
             }
+            throw new ArgumentException("error");
 
         }
-        public static void ln_1(double epsilon)
+        public static double ln_1(double epsilon)
         {
             double n = 1;
             double previous = n * (Math.Pow(2, (1.0 / n)) - 1);
+            
             while (true)
             {
                 n++;
@@ -155,15 +168,15 @@ namespace Project
                 if (Math.Abs(current - previous) > epsilon)
                 {
                     previous = current;
+                    
                 }
                 else
                 {
-                    Console.WriteLine(previous);
-                    break;
+                    return previous;     
                 }
             }
         }
-        public static void ln_2(double epsilon)
+        public static double ln_2(double epsilon)
         {
             double n = 1;
             double previous = Math.Pow(-1, n - 1) / n;
@@ -177,12 +190,11 @@ namespace Project
                 }
                 else
                 {
-                    Console.WriteLine(previous);
-                    break;
+                    return previous;   
                 }
             }
         }
-        public static void ln_3(double epsilon)
+        public static double ln_3(double epsilon)
         {
             double step = epsilon / 10.0;
             double x = step;
@@ -194,12 +206,11 @@ namespace Project
                 }
                 else
                 {
-                    Console.WriteLine(x);
-                    break;
+                    return x;  
                 }
             }
         }
-        public static void sqrt_1(double epsilon)
+        public static double sqrt_1(double epsilon)
         {
             double n = 2;
             double x = 1;
@@ -212,9 +223,9 @@ namespace Project
                 }
                 x = nx;
             }
-            Console.WriteLine(x);
+            return x;
         }
-        public static void sqrt_2(double epsilon)
+        public static double sqrt_2(double epsilon)
         {
             int k = 2;
 
@@ -230,12 +241,11 @@ namespace Project
                 }
                 else
                 {
-                    Console.WriteLine(previous);
-                    break;
+                    return previous;      
                 }
             }
         }
-        public static void sqrt_3(double epsilon)
+        public static double sqrt_3(double epsilon)
         {
             double step = epsilon / 10.0;
             double x = step;
@@ -247,13 +257,12 @@ namespace Project
                 }
                 else
                 {
-                    Console.WriteLine(x);
-                    break;
+                    return x;     
                 }
 
             }
         }
-        public static void gamma_1(double epsilon)
+        public static double gamma_1(double epsilon)
         {
             int n = (int)(1.0 / epsilon) * 100;
             double accum = 1.0;
@@ -269,12 +278,12 @@ namespace Project
                 else
                 {
                     accum = accum - Math.Log(i);
-                    Console.WriteLine(accum);
-                    break;
+                    return accum;        
                 }
             }
+            throw new ArgumentException("error");
         }
-        public static void gamma_2(double epsilon)
+        public static double gamma_2(double epsilon)
         {
             long k = 1;
             double n = 1.0 / epsilon;
@@ -284,9 +293,9 @@ namespace Project
                 k++;
                 previous += (1.0 / Math.Pow(((int)Math.Sqrt(k)), 2) - 1.0 / k);
             }
-            Console.WriteLine(previous);
+            return previous;
         }
-        public static void gamma_3(double epsilon)
+        public static double gamma_3(double epsilon)
         {
             int k = 2;
             double previous = (((double)(k - 1)) / k);
@@ -309,8 +318,7 @@ namespace Project
                 else
                 {
                     previous *= Math.Log(k);
-                    Console.WriteLine(previous);
-                    break;
+                    return previous;        
                 }
             }
         }
@@ -351,5 +359,6 @@ namespace Project
             return true;
 
         }
+        
     }
 }
